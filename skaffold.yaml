@@ -4,10 +4,12 @@ manifests:
   rawYaml:
     - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: copper-tempo-431205-f2
   artifacts:
-    - image: rsk9946/auth
+    - image: asia.gcr.io/copper-tempo-431205-f2/auth
       context: auth
       docker:
         dockerfile: Dockerfile

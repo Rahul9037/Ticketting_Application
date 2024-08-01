@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: rsk9946/auth
+          image: asia.gcr.io/copper-tempo-431205-f2/auth
 ---
 apiVersion: v1
 kind: Service
