@@ -1,6 +1,14 @@
 import { ValidationError } from 'express-validator';
 
-export class RequestValidationError extends Error {
+interface CustomError {
+  statusCode: number;
+  serializeErrors(): {
+    message: string;
+    field?: string;
+  }[];
+}
+
+export class RequestValidationError extends Error implements CustomError {
   statusCode = 400;
   constructor(public errors: ValidationError[]) {
     super();
@@ -13,6 +21,8 @@ export class RequestValidationError extends Error {
     return this.errors.map((error) => {
       if (error.type === 'field') {
         return { message: error.msg, field: error.path };
+      } else {
+        return { message: '', field: '' };
       }
     });
   }
