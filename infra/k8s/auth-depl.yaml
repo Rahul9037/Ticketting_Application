@@ -15,6 +15,14 @@ spec:
       containers:
         - name: auth
           image: asia.gcr.io/copper-tempo-431205-f2/auth
+          # for pointing to the secret key that was created inside the kubernetes
+          # using teh command 'kubectl create secret generic jwt-secret --from-literal=JWT_KEY=rsk9946'
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service

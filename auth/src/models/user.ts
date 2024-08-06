@@ -20,16 +20,29 @@ interface UserDoc extends mongoose.Document {
   password: string;
 }
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  //make chanegs to the returned response object in mongi we can add a toJSON function as below
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    },
+  }
+);
 
 //presave
 

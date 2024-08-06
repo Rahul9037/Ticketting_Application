@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { User } from '../models/user';
 import { RequestValidationError } from '../errors/request-validation-error';
 import { BadRequestError } from '../errors/bad-request-error';
+import jwt from 'jsonwebtoken';
 // import { DatabaseConnectionError } from '../errors/database-connection-error';
 
 const router = express.Router();
@@ -41,6 +42,29 @@ router.post(
 
     const user = User.build({ email, password });
     await user.save();
+
+    //generate JWT
+    //below code normally used but we need to catch this issue on startup itself so movinf to index.js
+    // if (!process.env.JWT_KEY) {
+    //   throw new Error('abcd.....');
+    // }
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      //'rsk9946' -- sign value hardcode
+      //accessing from the kubernetes sceret
+      // ! --  to let typescritp know the check has been doen at soem other places
+      process.env.JWT_KEY!
+    );
+
+    //Store it on the session object
+
+    //req.session.jwt = userJwt; --- issue with typescript
+    req.session = {
+      jwt: userJwt,
+    };
 
     res.status(201).send(user);
   }
