@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/request-validation-error';
+import { NotAuthorizedError } from '../errors/not-authorized-error';
 
 export const requireAuth = (
   req: Request,
@@ -8,8 +7,9 @@ export const requireAuth = (
   next: NextFunction
 ) => {
   if(!req.currentUser){
-    return res.status(401).send();
-  }
+    //return res.status(401).send(); -- normal way , since we haev separate not suthorizer error we wil use it
 
+    throw new NotAuthorizedError();
+  }
   next();
 };
